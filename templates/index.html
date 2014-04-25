@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Registries Galore{% endblock %}
+{% block body %}
+  <h1>All users and registries</h1>
+  <ul>
+    {% for user, registries in users_registries %}
+      {% if not user.owner_tuple %}
+      <li> {{ user.email }}
+        {% if registries %}
+          <ul>
+            {% for reg in registries %}
+              <li><a href="/{{ reg.registry_name }}">{{ reg.names }}'s Registry</a></li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+  <hr />
+  <a href="/signup">Sign up</a> for a new account.<br />
+  {% if user_info and not user_info.owner_tuple %}
+    You're logged in as {{ user_info.email }}. See <a href="/account">account</a>.
+    <a href="/logout">Log out</a>
+  {% else %}
+    <a href="/login"> Log in</a>
+  {% endif %}
+{% endblock %}

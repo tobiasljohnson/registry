@@ -1,0 +1,14 @@
+{% extends "registry_base.html" %}
+{% block title %}{{ registry.names }}'s Registry{% endblock %}
+{% block bodycontents %}
+  <h1>{{ registry.names }}'s Registry</h1>
+  <ul>
+    {% for entry in entries %}
+      <li><b>Wanted:</b> {{ entry.num_wanted }} {{ entry.name }}.
+        {% if entry.claimed %}
+          <b>Claimed:</b> {{ entry.claimed }}.
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

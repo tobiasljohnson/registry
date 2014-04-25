@@ -1,0 +1,24 @@
+application: wedding-registry
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: yes
+
+handlers:
+- url: /bootstrap
+  static_dir: bootstrap
+
+- url: /static
+  static_dir: static
+
+- url: /.*
+  script: main.application
+
+builtins:
+- remote_api: on
+
+libraries:
+- name: webapp2
+  version: 2.5.2
+- name: jinja2
+  version: latest

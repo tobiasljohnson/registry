@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block load %}{{ super() }}
+  <link href="/static/registry_build.css" rel="stylesheet">
+  <script src="/static/registry_build.js"></script>
+{% endblock %}
+{% block title %}{{ registry.names }}'s Registry{% endblock %}
+{% block body %}
+  <h1>{{ registry.names }}'s Registry</h1>
+  {% if not sections %}
+    <p>Nothing in your registry yet.</p>
+  {% endif %}
+  {% if not sections or sections[0][0] != "" %}
+    <div class="registry_section">
+      <ul id="nosection">
+        <li class="add_new_item">
+          <form action="" method="post" autocomplete="off" class="add_form">
+            <input type="hidden" name="request_type" value="add_item">
+            <input type="hidden" name="section" class="section" value="">
+            <input type="text" size="3" name="num_wanted" class="num_wanted first_focus" placeholder="#">
+            <input type="text" name="name" class="name" placeholder="things wanted">
+            <input type="submit" value="Add">
+          </form>  
+        </li>
+      </ul>
+    </div>
+  {% endif %}
+  {% for section in sections %}
+    <div class="registry_section">
+      {% if section[0] %}
+        <h2>{{ section[0] }}</h2>
+      {% endif %}
+      <ul id="{% if section[0] -%}
+                section_{{ section[0] }}
+              {%- else -%}
+                nosection
+              {%- endif %}">
+        {% for entry in section[1] %}
+          <li class="item">{{ entry.num_wanted }} {{ entry.name }}<img class="proto_x" alt="Delete" src="/static/gray_x_12.png"></li>
+        {% endfor %}
+        <li class="add_new_item">
+          <form action="" method="post" autocomplete="off" class="add_form">
+            <input type="hidden" name="request_type" value="add_item">
+            <input type="hidden" name="section" class="section" value="{{ section[0] }}">
+            <input type="text" size="3" name="num_wanted" class="num_wanted first_focus" placeholder="#">
+            <input type="text" name="name" class="name" placeholder="things wanted">
+            <input type="submit" value="Add">
+          </form>  
+        </li>
+      </ul>
+    </div>
+  {% endfor %}
+    <h2 class="add_new_section">
+        <form action="" method="post" autocomplete="off" class="add_form">
+          <input type="hidden" name="request_type" value="add_section">
+          <input type="text" name="name" class="name first_focus" placeholder="section name">
+          <input type="submit" value="Add">
+        </form>
+    </h2>
+  <hr />
+    <a href="/logout">Log out</a> <a href="/">Home</a>
+{% endblock %}

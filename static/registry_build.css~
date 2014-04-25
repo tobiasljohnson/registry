@@ -1,0 +1,32 @@
+ul {
+    list-style-position: inside;
+    padding-left: 2em;
+}
+
+.add_new_item {
+    color: #a0a0a0;
+    list-style-image: url("/static/green_plus_12.png");
+    cursor: pointer;
+}
+
+.add_new_section {
+    color: #a0a0a0;
+    background: url("/static/green_plus_12.png") no-repeat 0 15px;
+    padding-left: 1em;
+    cursor: pointer;
+    min-height: 2em;
+}
+
+.expanded {
+    cursor: default;
+}
+
+
+
+.add_form {
+    display: inline;
+}
+
+.hidden {
+    display: none;
+}

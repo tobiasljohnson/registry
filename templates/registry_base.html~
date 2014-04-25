@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}{{ registry.names }}{% endblock %}
+{% block body %}
+  {% block bodycontents %}
+  {% endblock %}
+  {% block footer %}
+    <hr />
+    {% if viewer_email %}You're viewing this registry as {{ viewer_email }}.
+    {% else %}You're viewing this registry anonymously. 
+      <a href="login">Log in to make changes</a>{% endif %}
+    <a href="logout">Log out</a>
+  {% endblock %}
+{% endblock %}
+    

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}{{ user_info.email }}'s Registries{% endblock %}
+{% block body %}
+  <h1>{{ user_info.email }}'s Registries</h1>
+  {% if registries %}
+    You have the following registries:
+    <ul>
+    {% for reg in registries %}
+      <li><a href="/{{ reg.registry_name }}">{{ reg.names }}'s Registry</a></li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+   <form action="/new_registry" method="post">
+    <div>Registry Name (used in address):<input type="text" name="registry_name"></div>
+    <div>People getting married:<input type="text" name="names"></div>
+    <div>A password for visitors:<input type="text" name="password"></div>
+    <div><input type="submit" value="Make New Registry"></div>
+  </form>  
+  <hr />
+    <a href="/logout">Log out</a> <a href="/">Home</a>
+{% endblock %}

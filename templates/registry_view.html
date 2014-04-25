@@ -1,0 +1,25 @@
+{% extends "registry_base.html" %}
+{% block title %}{{ registry.names }}'s Registry{% endblock %}
+{% block bodycontents %}
+  <h1>{{ registry.names }}'s Registry</h1>
+  {% if viewer %}
+    <form action="" method="post">
+  {% endif %}
+  <ul>
+    {% for entry in entries %}
+      <li>
+        <div><b>Wanted:</b> {{ entry.num_wanted }} {{ entry.name }}.
+          <b>Already claimed:</b> {{ entry.claimed }}.
+        </div>
+        {% if viewer %}
+        <div>
+          <b>Claimed by you:</b><input type="text" name="{{ entry.key.id() }}" value="{{ entry.num_claimed_by(viewer) }}">
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+  {% if viewer %}
+    <input type="submit" value="Change claims">
+    </form>
+  {% endif %}
+{% endblock %}
