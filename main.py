@@ -135,13 +135,15 @@ class BaseHandler(webapp2.RequestHandler):
         self._clear_registry_token()
 
     def authorize_registry_view(self, registry, password):
-        """Authorize the current user to view registry.
+        """Authorize the current user to view registry anonymously.
 
         The authorization will be stored as a cookie until the browser clears it on close.
+        Also logs out of any builder account or registry viewer account.
         Return True if the user is successfully authorized, false if the password doesn't match.
 
         """
         self._clear_registry_token()
+        self.auth.unset_session()
         if registry.insecure_password == password:
             logging.info("passwords matched")
             self._make_registry_token(registry)
@@ -404,8 +406,11 @@ class RegistryLogoutPage(BaseHandler):
     def get(self, registry):
         if self.session.get('cur_view') == registry.key.flat():
             self.unauthorize_registry_view()
-        if self.user_info and ndb.Key(flat=self.user_info.get('owner_tuple')) == registry.key:
-            self.auth.unset_session()
+        if self.user_info:
+            if self.user_info.get('owner_tuple') is None:  # logged in as owner
+                return self.redirect_to('builder-logout')
+            if ndb.Key(flat=self.user_info.get('owner_tuple')) == registry.key:
+                self.auth.unset_session()
         return self.redirect_to('home')
 
 class RegistryLoginPage(BaseHandler):
@@ -419,7 +424,7 @@ class RegistryLoginPage(BaseHandler):
 
         @ndb.transactional
         def get_or_create_user(email, parent_key):
-            """Get or make a new new viewer-type RegistryUser.
+            """Get or make a new viewer-type RegistryUser.
 
             Return a tuple. The first element is True if the user existed, False if it had to be made.
             The second is the user.
