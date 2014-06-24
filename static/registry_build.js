@@ -1,3 +1,6 @@
+/*
+ * Sets up the javascript for adding new items to the registry.
+ */
 var hoverify_add = function($e, hover_text) {
     hoverify($e,
              function (elmt) { // hover_on
@@ -6,12 +9,12 @@ var hoverify_add = function($e, hover_text) {
              function (elmt) { // hover_off
                  $(elmt).children(":first-child").remove();
              },
-             function (elmt) { // click
-                 if ($(elmt).hasClass('hovered')) {
-                     $(elmt).removeClass('hovered')
+             function (event) { // click
+                 if ($(this).hasClass('hovered')) {
+                     $(this).removeClass('hovered')
                          .children(':first-child').remove();
                  }
-                 $(elmt).off('mouseenter.hover')
+                 $(this).off('mouseenter.hover')
                      .off('mouseleave.hover')
                      .off('click.hover')
                      .addClass('expanded')
@@ -27,11 +30,12 @@ var hoverify_delete = function($e) {
              },
              function (elmt) {
              });
-    hoverify($e.children('img.x'),
+    hoverify($e.find('.x'),
              function (elmt) {
-                 $(elmt).attr('src',
+                 $(elmt).attr('src', '/static/red_x_12.png');
              },
              function (elmt) {
+                 $(elmt).attr('src', '/static/gray_x_12.png');
              },
              function (elmt) {
              });
@@ -41,6 +45,7 @@ var hoverify_delete = function($e) {
 var add_li_code = function (section) {
     return '<li class="add_new_item"><form action="" method="post" autocomplete="off" class="add_form"><input type="hidden" name="request_type" value="add_item"><input type="hidden" name="section" class="section" value="' + section + '"><input type="text" size="3" name="num_wanted" class="num_wanted first_focus" placeholder="#"><input type="text" name="name" class="name" placeholder="things wanted"><input type="submit" value="Add"></form></li>';
 };
+
 
 var submit_new_item = function (e) {
     var that = this;
@@ -69,6 +74,10 @@ var submit_new_item = function (e) {
            "json");
     e.preventDefault();
 };
+
+var submit_delete_item = function (e) {
+    e.preventDefault();
+}
 
 var submit_new_section = function (e) {
     e.preventDefault();
@@ -120,6 +129,7 @@ $(function () {
         .submit(submit_new_item);
     $('.add_new_section > .add_form').addClass('hidden')
         .submit(submit_new_section);
+    $('.delete_form').submit(submit_delete_item);
     $('.x').removeClass('nojs');
 
     hoverify_add($('.add_new_item'), "new item");

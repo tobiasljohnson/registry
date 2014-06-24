@@ -9,19 +9,23 @@ li {
     margin-top: 0.1em;
 }
 
-li > img.x {
+li.item > form {
     float: right;
-    display: none; 
 }
 
-li > img.nojs {
+li > .x {
+    float: right;
+/*    display: none; */
+}
+
+li > .nojs {
     display: inline;
 }
 
 
 
-li.hovered > img.x {
-    display: inline;
+li.hovered > .x {
+/*    display: inline;*/
 }
     
 

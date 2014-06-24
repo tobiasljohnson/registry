@@ -36,7 +36,13 @@
                 nosection
               {%- endif %}">
         {% for entry in section[1] %}
-          <li class="item">{{ entry.num_wanted }} {{ entry.name }}<img class="x nojs" alt="Delete" src="/static/gray_x_12.png"></li>
+          <li class="item">{{ entry.num_wanted }} {{ entry.name }}
+            <form class="delete_form" action="" method="post">
+              <input type="hidden" name="request_type" value="delete_item">
+              <input type="hidden" name="item_key" value="{{ entry.key }}">
+              <input type="image" class="x nojs" alt="Delete" src="/static/gray_x_12.png">
+            </form>
+          </li>
         {% endfor %}
         <li class="add_new_item">
           <form action="" method="post" autocomplete="off" class="add_form">
