@@ -22,24 +22,9 @@ var hoverify_add = function($e, hover_text) {
              });
 }
 
-var hoverify_delete = function($e) {
-    hoverify($e,
-             function (elmt) {
-             },
-             function (elmt) {
-             },
-             function (elmt) {
-             });
-    hoverify($e.find('.x'),
-             function (elmt) {
-                 $(elmt).attr('src', '/static/red_x_12.png');
-             },
-             function (elmt) {
-                 $(elmt).attr('src', '/static/gray_x_12.png');
-             },
-             function (elmt) {
-             });
 
+var li_code = function(id, num_wanted, name) {
+    return '<li class="item" id="' + id + '">' + num_wanted + ' ' + name + '<form class="delete_form" action="" method="post"><input type="hidden" name="request_type" value="delete_item"><input type="hidden" name="item_key" class="item_key" value="' + id + '"><input type="submit" class="x" value=""><img class="spinning" src="/static/loading_12.gif" style="display: none"></form></li>';
 }
 
 var add_li_code = function (section) {
@@ -58,25 +43,49 @@ var submit_new_item = function (e) {
         } else {
             section_id = "#section_" + data.section
         }
-        $(section_id).append('<li class="item">' + data.num_wanted + " " + data.name + "</li>");
+        $li = $(li_code(data.id, data.num_wanted, data.name));
+        $li.appendTo($(section_id));
+        $li.children('.delete_form').submit(submit_delete_item);
+        
+
         $li = $(add_li_code(data.section));
         $li.appendTo($(section_id));
-        $li.find('.add_form').addClass('hidden').submit(submit_new_item);
+        $li.children('.add_form').addClass('hidden').submit(submit_new_item);
         hoverify_add($li, "new item");                
     };
+    frm = $(this);
     $.post("",
            {ajax: 1,
             request_type: 'add_item',
-            num_wanted: $(this).children('.num_wanted').val(), 
-            name: $(this).children('.name').val(),
-            section: $(this).children('.section').val()},
+            num_wanted: frm.children('.num_wanted').val(), 
+            name: frm.children('.name').val(),
+            section: frm.children('.section').val()},
            item_added,
            "json");
+    
     e.preventDefault();
 };
 
 var submit_delete_item = function (e) {
-    e.preventDefault();
+    var that = this;
+    
+    /*
+     * Callback for when server responds to ajax request.
+     */
+    var item_deleted = function (data, textStatus, jqXHR) {
+        if (data.item_key != 0) {
+            $('#' + data.item_key).remove();
+        }
+    };
+    $.post("",
+           {ajax: 1,
+            request_type: 'delete_item',
+            item_key: $(this).children('.item_key').val()},
+           item_deleted,
+           "json");
+    $(this).children('.x').hide();
+    $(this).children('.spinning').show();
+    e.preventDefault();    
 }
 
 var submit_new_section = function (e) {
@@ -134,6 +143,5 @@ $(function () {
 
     hoverify_add($('.add_new_item'), "new item");
     hoverify_add($('.add_new_section'), "new section");
-    hoverify_delete($('li.item'));
                   
 });

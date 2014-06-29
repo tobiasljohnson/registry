@@ -305,7 +305,7 @@ class BuildPage(BaseHandler):
 
     @get_registry_from_name
     def post(self, registry):
-        """Adds a new entry to the registry."""
+        """Edit the registry based on the submitted info."""
         
         if not self.user_info or registry.owner != ndb.Key(flat=self.user_info['user_id']):
             return self.redirect_to('builder-login',
@@ -330,7 +330,16 @@ class BuildPage(BaseHandler):
                                   order=high_order+1, section=section)
             entry.put()
             logging.info(section)
-            retval = {'num_wanted': num_wanted, 'name': name, 'section': section}
+            retval = {'num_wanted': num_wanted, 'name': name, 'section': section,
+                      'id': entry.key.urlsafe()}
+        elif request_type == 'delete_item':
+            item_key = self.request.get('item_key')
+            try:
+                k = ndb.Key(urlsafe=item_key)
+                k.delete()
+            except TypeError:
+                item_key = 0
+            retval = {'item_key': item_key}
         else:
             webapp2.abort(405)
 

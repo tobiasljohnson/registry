@@ -36,11 +36,12 @@
                 nosection
               {%- endif %}">
         {% for entry in section[1] %}
-          <li class="item">{{ entry.num_wanted }} {{ entry.name }}
+          <li class="item" id="{{ entry.key.urlsafe() }}">{{ entry.num_wanted }} {{ entry.name }}
             <form class="delete_form" action="" method="post">
               <input type="hidden" name="request_type" value="delete_item">
-              <input type="hidden" name="item_key" value="{{ entry.key }}">
-              <input type="image" class="x nojs" alt="Delete" src="/static/gray_x_12.png">
+              <input type="hidden" name="item_key" class="item_key" value="{{ entry.key.urlsafe() }}">
+              <input type="submit" class="x nojs" value="">
+              <img class="spinning" src="/static/loading_12.gif" style="display: none">
             </form>
           </li>
         {% endfor %}
